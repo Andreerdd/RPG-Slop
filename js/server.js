@@ -16,6 +16,7 @@ app.use(express.static(publicDir));
 const pages = [
   ['/', 'index', 'RPG Slop'],
   ['/exemplo', 'exemplo', 'Exemplo'],
+  ['/lobby', 'lobby', 'Lobby'],
 ];
 
 pages.forEach(([route, pageName, title]) => {
@@ -23,6 +24,7 @@ pages.forEach(([route, pageName, title]) => {
     res.render(pageName, { title, pageName });
   });
 });
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
