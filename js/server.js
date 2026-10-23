@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const { sequelize } = require('./database');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,6 +26,16 @@ pages.forEach(([route, pageName, title]) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
+async function startServer() {
+  await sequelize.authenticate();
+  await sequelize.sync();
+
+  app.listen(PORT, () => {
+    console.log(`Servidor rodando em http://localhost:${PORT}`);
+  });
+}
+
+startServer().catch((error) => {
+  console.error('Erro ao inicializar o banco de dados:', error);
+  process.exitCode = 1;
 });
