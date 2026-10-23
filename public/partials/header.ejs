@@ -10,6 +10,6 @@
     <header class="header">
       <a class="logo glitch" data-text="VIAGEM//TRIÁSSICA" href="/">VIAGEM<span>//</span>TRIÁSSICA</a>
       <div class="header-right">
-        <span>Nada aqui por enquanto!</span>
+        <span><%= currentUser ? currentUser.username : 'Nada aqui por enquanto!' %></span>
       </div>
     </header>

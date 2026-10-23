@@ -84,7 +84,7 @@ async function onUserRegister(req, res) {
 
         // Por mais que tenha acabado de criar a conta, em algum caso muito específico
         // a senha, por exemplo, já pode ter sido alterada
-        await authenticateUser(nomeregistro, senharegistro);
+        await authenticateUser(usuarioregistro, senharegistro);
 
         return res.json({ type: 'success', redirect: '/' });
     } catch (error) {

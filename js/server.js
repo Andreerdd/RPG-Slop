@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
-const { sequelize } = require('./database');
-const { onUserLogin, onUserRegister } = require('./account')
+const { sequelize, User } = require('./database');
+const { onUserLogin, onUserRegister, getCurrentUser } = require('./account')
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -31,12 +31,15 @@ const postRoutes = [
 
 // "Automatiza" os GET requests
 pages.forEach(([route, pageName, title]) => {
-  app.get(route, (req, res) => {
+  app.get(route, async (req, res) => {
+    const currentUserId = getCurrentUser();
+    const currentUser = currentUserId ? await User.findByPk(currentUserId) : null;
 
     res.render(pageName, {
       title,
       pageName,
       reqQuery: req.query,
+      currentUser,
     });
   });
 });
