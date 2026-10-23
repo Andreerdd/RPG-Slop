@@ -1,5 +1,61 @@
 <%- include('partials/header') %>
 
+<div class="lobby">
+    <div class="panel character-selection">
+        <span class="tag" data-text="Seus personagens">Equipe de pesquisa</span>
+        <div class="character-list">
+            <% for(let i = 0; i < 1; i++) { %>
+            <div class="character-card panel" id="template-card">
+                <div class="lab-data">
+                    <img src="../assets/penrose-red.svg" width="24px" height="24px">
+                    <span>ARK LABORATÓRIOS</span>
+                </div>
+                <span class="card-label">CARTÃO DE FUNCIONÁRIO</span>
+                <img class="seal" src="../assets/seal.png" width="86px" height="86px">
 
+                <div class="avatar"></div>
+
+                <span class="document-number" data-text="DOCUMENTO">132.625.132.08</span>
+
+                <div class="sheet">
+                    <span class="sheet-item" data-text="NOME">BOBINHO DA SILVA</span>
+                    <span class="sheet-item" data-text="SETOR">ENGENHARIA GENÉTICA</span>
+                    <span class="sheet-item" data-text="DATA DE EXPEDIÇÃO">23.10.2026</span>
+                </div>
+
+                <div class="attributes">
+                    <span class="attribute-item" data-text="STR">12</span>
+                    <span class="attribute-item" data-text="SPD">12</span>
+                    <span class="attribute-item" data-text="CON">12</span>
+                    <span class="attribute-item" data-text="INT">12</span>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </div>
+    <div class="room-selection">
+        <div class="panel">
+            <span class="tag" data-text="Criar uma campanha">Começar pesquisa</span>
+            <label>
+                Nome da Sala
+            </label>
+            <input id="nome-sala">
+            <label>
+                Tema da Sala
+            </label>
+            <textarea id="tema-sala"></textarea>
+            <button>Criar e gerar campanha</button>
+        </div>
+
+        <div class="panel">
+            <span class="tag" data-text="Entrar em uma campanha">Se juntar à pesquisa</span>
+            <label>
+                Código da Sala
+            </label>
+            <input id="codigo-sala" placeholder="A B C 1 2 3">
+            <button>Entrar</button>
+        </div>
+    </div>
+</div>
 
 <%- include('partials/footer') %>

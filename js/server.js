@@ -12,11 +12,13 @@ app.use('/css', express.static(path.join(publicDir, 'css')));
 app.use('/img', express.static(path.join(publicDir, 'img')));
 app.use(express.static(publicDir));
 
-// Vetor de páginas no formato [link, nome da página, título]
+// rotas [rota, nome da página, título]
 const pages = [
-  ['/', 'index', 'RPG Slop'],
-  ['/exemplo', 'exemplo', 'Exemplo'],
-  ['/lobby', 'lobby', 'Lobby'],
+  ['/', 'lobby', 'Lobby'],
+  ['/login', 'login', 'Acessar Conta'], // cadastro e login na mesma página
+  ['/sala', 'sala', 'Sala X'],
+  ['/teste-llm', 'teste-llm', 'Teste LLM'],
+  ['/teste-lmm', 'teste-lmm', 'Teste LMM']
 ];
 
 pages.forEach(([route, pageName, title]) => {
