@@ -5,6 +5,9 @@
 const bcrypt = require('bcrypt');
 const { User } = require('./database');
 
+// Usuário atualmente logado
+let currentUser = null;
+
 // Quantidade de vezes que o hash será feito
 const saltRounds = 10;
 
@@ -31,18 +34,29 @@ async function createUser(displayName, username, password, authenticate=false) {
 }
 
 /**
- * Confere as credenciais de login.
+ * Confere as credenciais de login e autentica o usuário.
  * @param {string} username nome de usuário
  * @param {string} password senha sem hash
- * @returns {Promise<object|null>} usuário autenticado ou null
+ * @returns {Promise<Boolean>} se conseguiu autenticar
  */
 async function authenticateUser(username, password) {
     const user = await User.findOne({ where: { username } });
     if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
-        return null;
+        return false;
     }
-    console.log("autenticou com sucesso!");
-    return user;
+
+    await forceAuthenticateUser(user);
+
+    return true;
+}
+
+/**
+ * Define o usuário dado como autenticado sem fazer verificações.
+ * @param user usuário que será autenticado
+ * @return {Promise<void>}
+ */
+async function forceAuthenticateUser(user) {
+    currentUser = user.id;
 }
 
 /**
@@ -68,8 +82,11 @@ async function onUserRegister(req, res) {
         if (!user)
             return res.status(500).json({ type: 'error', code: 'erro-servidor' });
 
+        // Por mais que tenha acabado de criar a conta, em algum caso muito específico
+        // a senha, por exemplo, já pode ter sido alterada
+        await authenticateUser(nomeregistro, senharegistro);
+
         return res.json({ type: 'success', redirect: '/' });
-        //return res.status(201).json({ type: 'success', code: 'conta-criada' });
     } catch (error) {
         console.error('Erro ao criar conta:', error);
         return res.status(500).json({ type: 'error', code: 'erro-servidor' });
@@ -90,9 +107,9 @@ async function onUserLogin(req, res) {
 
     try {
         const user = await authenticateUser(usuariologin, senhalogin);
-        if (!user) {
+        if (!user)
             return res.status(401).json({ type: 'error', code: 'credenciais' });
-        }
+
 
         return res.json({ type: 'success', redirect: '/' });
     } catch (error) {
@@ -115,7 +132,17 @@ async function isUsernameUsed(username) {
     return !!(user); // not (not (object)) = booleano
 }
 
+/**
+ * Retorna o usuário atualmente logado.
+ * @return {object|null} o usuário atualmente logado ou null.
+ */
+function getCurrentUser() {
+    return currentUser;
+}
+
 module.exports = {
     onUserRegister,
-    onUserLogin
+    onUserLogin,
+
+    getCurrentUser
 };

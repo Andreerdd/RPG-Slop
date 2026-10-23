@@ -2,17 +2,14 @@
 
 <%
 const authMessages = {
-  'campos': 'Preencha todos os campos para continuar.',
-  'usuario-em-uso': 'Esse usuário já está em uso.',
-  'credenciais': 'Usuário ou senha inválidos.',
-  'erro-servidor': 'Não foi possível concluir a operação. Tente novamente.',
-};
-const successMessages = {
-  'conta-criada': 'Conta criada com sucesso. Faça login para continuar.',
+  'campos': { type: 'error', text: 'Preencha todos os campos para continuar.' },
+  'usuario-em-uso': { type: 'error', text: 'Esse usuário já está em uso.' },
+  'credenciais': { type: 'error', text: 'Usuário ou senha inválidos.' },
+  'erro-servidor': { type: 'error', text: 'Não foi possível concluir a operação. Tente novamente.' },
+  'conta-criada': { type: 'success', text: 'Conta criada com sucesso. Faça login para continuar.' },
 };
 const query = typeof reqQuery !== 'undefined' ? reqQuery : {};
-const initialErrorMessage = authMessages[query.erro];
-const initialSuccessMessage = successMessages[query.sucesso];
+const initialMessage = authMessages[query.erro] || authMessages[query.sucesso];
 %>
 
 <main class="auth-page">
@@ -24,10 +21,9 @@ const initialSuccessMessage = successMessages[query.sucesso];
 
   <div class="auth-forms">
     <p class="auth-message" id="auth-message" role="status"
-      <% if (!initialErrorMessage && !initialSuccessMessage) { %>hidden<% } %>
-      <% if (initialErrorMessage) { %>data-type="error"<% } %>
-      <% if (initialSuccessMessage) { %>data-type="success"<% } %>>
-      <%= initialErrorMessage || initialSuccessMessage || '' %>
+      <% if (!initialMessage) { %>hidden<% } %>
+      <% if (initialMessage) { %>data-type="<%= initialMessage.type %>"<% } %>>
+      <%= initialMessage ? initialMessage.text : '' %>
     </p>
 
     <div class="auth-card" id="registro" hidden>
@@ -73,17 +69,12 @@ const initialSuccessMessage = successMessages[query.sucesso];
   const login = document.getElementById('login');
   const alternarAutenticacao = document.getElementById('alternar-autenticacao');
   const authMessage = document.getElementById('auth-message');
-  const authMessages = {
-    campos: 'Preencha todos os campos para continuar.',
-    'usuario-em-uso': 'Esse usuário já está em uso.',
-    credenciais: 'Usuário ou senha inválidos.',
-    'erro-servidor': 'Não foi possível concluir a operação. Tente novamente.',
-    'conta-criada': 'Conta criada com sucesso. Faça login para continuar.',
-  };
+  const authMessages = <%- JSON.stringify(authMessages) %>;
 
   function showAuthMessage(type, code) {
-    authMessage.textContent = authMessages[code] || authMessages['erro-servidor'];
-    authMessage.dataset.type = type;
+    const message = authMessages[code] || authMessages['erro-servidor'];
+    authMessage.textContent = message.text;
+    authMessage.dataset.type = type || message.type;
     authMessage.hidden = false;
   }
 
