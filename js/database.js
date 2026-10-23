@@ -23,14 +23,14 @@ const User = sequelize.define('User', {
     allowNull: false,
     unique: true,
   },
+  passwordHash: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
   displayName: {
     type: DataTypes.STRING(100),
     allowNull: false,
-  },
-  passwordHash: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
+  }
 });
 
 const Character = sequelize.define('Character', {

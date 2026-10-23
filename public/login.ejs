@@ -1,0 +1,132 @@
+<%- include('partials/header') %>
+
+<%
+const authMessages = {
+  'campos': 'Preencha todos os campos para continuar.',
+  'usuario-em-uso': 'Esse usuário já está em uso.',
+  'credenciais': 'Usuário ou senha inválidos.',
+  'erro-servidor': 'Não foi possível concluir a operação. Tente novamente.',
+};
+const successMessages = {
+  'conta-criada': 'Conta criada com sucesso. Faça login para continuar.',
+};
+const query = typeof reqQuery !== 'undefined' ? reqQuery : {};
+const initialErrorMessage = authMessages[query.erro];
+const initialSuccessMessage = successMessages[query.sucesso];
+%>
+
+<main class="auth-page">
+  <div class="auth-intro">
+    <p class="eyebrow">ACESSO À AVENTURA</p>
+    <h1>Entre na <span>Viagem</span></h1>
+    <p class="auth-description">Crie seu personagem, encontre seu grupo e escreva o próximo capítulo.</p>
+  </div>
+
+  <div class="auth-forms">
+    <p class="auth-message" id="auth-message" role="status"
+      <% if (!initialErrorMessage && !initialSuccessMessage) { %>hidden<% } %>
+      <% if (initialErrorMessage) { %>data-type="error"<% } %>
+      <% if (initialSuccessMessage) { %>data-type="success"<% } %>>
+      <%= initialErrorMessage || initialSuccessMessage || '' %>
+    </p>
+
+    <div class="auth-card" id="registro" hidden>
+      <p class="card-kicker">// NOVO JOGADOR</p>
+      <h2>Criar conta</h2>
+      <form action="/create-account" method="post">
+        <label for="nomeregistro">Nome</label>
+        <input type="text" id="nomeregistro" name="nomeregistro" autocomplete="name" placeholder="Como devemos chamar você?" required />
+
+        <label for="usuarioregistro">Usuário</label>
+        <input type="text" id="usuarioregistro" name="usuarioregistro" autocomplete="username" placeholder="Escolha seu nome de jogador" required />
+
+        <label for="senharegistro">Senha</label>
+        <input type="password" id="senharegistro" name="senharegistro" autocomplete="new-password" placeholder="Crie uma senha segura" required />
+
+        <button type="submit">Criar conta</button>
+      </form>
+    </div>
+
+    <div class="auth-card" id="login">
+      <p class="card-kicker">// JÁ TEM UMA CONTA?</p>
+      <h2>Logar</h2>
+      <form action="/login" method="post">
+        <label for="usuariologin">Usuário</label>
+        <input type="text" id="usuariologin" name="usuariologin" autocomplete="username" placeholder="Digite seu usuário" required />
+
+        <label for="senhalogin">Senha</label>
+        <input type="password" id="senhalogin" name="senhalogin" autocomplete="current-password" placeholder="Digite sua senha" required />
+
+        <button type="submit">Logar</button>
+      </form>
+    </div>
+  </div>
+
+  <button class="auth-switch" id="alternar-autenticacao" type="button" aria-controls="registro login">
+    Não tem uma conta? <span>Crie uma!</span>
+  </button>
+</main>
+
+<!-- Alterna os formulários e envia os dados sem recarregar a página. -->
+<script>
+  const registro = document.getElementById('registro');
+  const login = document.getElementById('login');
+  const alternarAutenticacao = document.getElementById('alternar-autenticacao');
+  const authMessage = document.getElementById('auth-message');
+  const authMessages = {
+    campos: 'Preencha todos os campos para continuar.',
+    'usuario-em-uso': 'Esse usuário já está em uso.',
+    credenciais: 'Usuário ou senha inválidos.',
+    'erro-servidor': 'Não foi possível concluir a operação. Tente novamente.',
+    'conta-criada': 'Conta criada com sucesso. Faça login para continuar.',
+  };
+
+  function showAuthMessage(type, code) {
+    authMessage.textContent = authMessages[code] || authMessages['erro-servidor'];
+    authMessage.dataset.type = type;
+    authMessage.hidden = false;
+  }
+
+  alternarAutenticacao.addEventListener('click', () => {
+    const mostrandoRegistro = registro.hasAttribute('hidden');
+    registro.toggleAttribute('hidden', !mostrandoRegistro);
+    login.toggleAttribute('hidden', mostrandoRegistro);
+    alternarAutenticacao.innerHTML = mostrandoRegistro
+      ? 'Já tem conta? <span>Faça login</span>'
+      : 'Não tem uma conta? <span>Crie uma!</span>';
+    authMessage.hidden = true;
+
+    // Faz focar no primeiro input da tela
+    (mostrandoRegistro ? registro : login).querySelector('input').focus();
+  });
+
+  document.querySelectorAll('.auth-card form').forEach((form) => {
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const submitButton = form.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: new URLSearchParams(new FormData(form)),
+          headers: { Accept: 'application/json' },
+        });
+        const result = await response.json();
+
+        if (result.redirect) {
+          window.location.href = result.redirect;
+          return;
+        }
+
+        showAuthMessage(result.type, result.code);
+      } catch (error) {
+        showAuthMessage('error', 'erro-servidor');
+      } finally {
+        submitButton.disabled = false;
+      }
+    });
+  });
+</script>
+
+<%- include('partials/footer') %>

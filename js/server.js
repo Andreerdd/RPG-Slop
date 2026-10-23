@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const { sequelize } = require('./database');
+const { onUserLogin, onUserRegister } = require('./account')
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,19 +13,41 @@ app.set('views', publicDir);
 app.use('/css', express.static(path.join(publicDir, 'css')));
 app.use('/img', express.static(path.join(publicDir, 'img')));
 app.use(express.static(publicDir));
+app.use(express.urlencoded({ extended: false }));
 
-// Vetor de páginas no formato [link, nome da página, título]
+// Vetor de rotas GET (de páginas, basicamente) no formato [link, nome da página no /public, título]
 const pages = [
   ['/', 'index', 'RPG Slop'],
   ['/exemplo', 'exemplo', 'Exemplo'],
   ['/lobby', 'lobby', 'Lobby'],
+  ['/login', 'login', 'Entrar'],
 ];
 
+// Vetor de rotas POST no formato [link, função que lidará com a requisição]
+const postRoutes = [
+  ['/create-account', onUserRegister],
+  ['/login', onUserLogin],
+];
+
+// "Automatiza" os GET requests
 pages.forEach(([route, pageName, title]) => {
   app.get(route, (req, res) => {
-    res.render(pageName, { title, pageName });
+
+    res.render(pageName, {
+      title,
+      pageName,
+      reqQuery: req.query,
+    });
   });
 });
+
+// "Automatiza" os POST requests
+postRoutes.forEach(([route, handler]) => {
+  app.post(route, (req, res) => {
+    handler(req, res);
+  });
+});
+
 
 async function startServer() {
   await sequelize.authenticate();
