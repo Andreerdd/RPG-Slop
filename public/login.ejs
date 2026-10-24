@@ -1,5 +1,82 @@
 <%- include('partials/header') %>
 
+<link rel="stylesheet" href="/css/login.css" />
 
+<main class="contract-page">
+    <form class="contract" method="post" action="/login">
+
+        <!-- Faixa de perigo amarela e preta no topo do papel -->
+        <div class="hazard-stripe"></div>
+        
+        <!-- CABEÇALHO DO DOCUMENTO -->
+        <div class="contract-header">
+            <div class="lab-data">
+                <img src="../assets/penrose-red.svg" width="28px" height="28px">
+                <span>ARK LABORATÓRIOS</span>
+            </div>
+            <div class="contract-code">
+                <span data-text="FORMULÁRIO">7-B</span>
+                <span data-text="Nº DO CONTRATO">GEN-2026-0423</span>
+            </div>
+        </div>
+
+        <h1 class="contract-title">Contrato de admissão</h1>
+        <p class="contract-subtitle">
+            Projeto GÊNESE · Unidade de Pesquisa em Desextinção ·
+            Setor: Período Triássico
+        </p>
+
+        <section class="contract-section">
+            <h2 class="section-title" data-text="Parte I">Cláusulas</h2>
+            <!-- class="redacted" = trecho "tarjado" (faixa preta por cima do texto) -->
+            <ol class="clauses">
+                <li>O CONTRATADO integrará a equipe de pesquisa do Projeto GÊNESE <span class="redacted">e terá acesso aos setores B, C e ao viveiro principal</span> e seguirá todos os protocolos de contenção.</li>
+                <li>É proibido <span class="redacted">alimentar, montar ou dar apelidos aos espécimes</span>. Também é proibido <span class="redacted">levar ovos para casa</span>.</li>
+                <li>A ARK Laboratórios não se responsabiliza por <span class="redacted">mordidas, pisoteamentos, fugas de recintos ou desaparecimentos</span>.</li>
+                <li><span class="redacted">O número real de espécimes vivos no complexo</span> é informação confidencial <span class="redacted">e não deve ser comentado com a imprensa</span>.</li>
+                <li>Em caso de <span class="redacted">falha na contenção</span>, o CONTRATADO deve <span class="redacted">correr até o abrigo mais próximo e não fazer barulho</span> e aguardar o resgate.</li>
+                <li><span class="redacted">O incidente do setor 4 nunca aconteceu e não será mencionado em nenhuma circunstância.</span></li>
+            </ol>
+        </section>
+
+        <section class="contract-section">
+            <h2 class="section-title" data-text="Parte II">Identificação do contratado</h2>
+
+            <div class="fields">
+                <label class="field">
+                    Nome de usuário
+                    <input type="text" name="usuario" autocomplete="username" required>
+                </label>
+                <label class="field">
+                    Senha de acesso
+                    <input type="password" name="senha" autocomplete="current-password" required>
+                </label>
+            </div>
+        </section>
+
+        <section class="signatures">
+            <div class="signature">
+                <span class="signature-name">Dra. M. Kappa</span>
+                <span class="signature-line" data-text="Responsável ARK"></span>
+            </div>
+        </section>
+
+        <div class="contract-actions">
+            <button type="submit" class="button-sign" formaction="/cadastro">
+                Assinar contrato
+            </button>
+            <button type="submit" class="button-login" formaction="/login" formnovalidate>
+                Já tenho contrato · Entrar
+            </button>
+        </div>
+
+        <!-- Rodapé do papel -->
+        <div class="contract-footer">
+            <span>CONFIDENCIAL</span>
+            <span>ARK//LABS</span>
+            <span>PÁG. 1/1</span>
+        </div>
+    </form>
+</main>
 
 <%- include('partials/footer') %>
