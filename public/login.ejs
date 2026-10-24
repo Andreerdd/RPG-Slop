@@ -3,12 +3,10 @@
 <link rel="stylesheet" href="/css/login.css" />
 
 <main class="contract-page">
-    <form class="contract" method="post" action="/login">
+    <form class="contract" method="post" action="/create-account" data-fetch>
 
-        <!-- Faixa de perigo amarela e preta no topo do papel -->
         <div class="hazard-stripe"></div>
-        
-        <!-- CABEÇALHO DO DOCUMENTO -->
+
         <div class="contract-header">
             <div class="lab-data">
                 <img src="../assets/penrose-red.svg" width="28px" height="28px">
@@ -28,7 +26,6 @@
 
         <section class="contract-section">
             <h2 class="section-title" data-text="Parte I">Cláusulas</h2>
-            <!-- class="redacted" = trecho "tarjado" (faixa preta por cima do texto) -->
             <ol class="clauses">
                 <li>O CONTRATADO integrará a equipe de pesquisa do Projeto GÊNESE <span class="redacted">e terá acesso aos setores B, C e ao viveiro principal</span> e seguirá todos os protocolos de contenção.</li>
                 <li>É proibido <span class="redacted">alimentar, montar ou dar apelidos aos espécimes</span>. Também é proibido <span class="redacted">levar ovos para casa</span>.</li>
@@ -44,17 +41,29 @@
 
             <div class="fields">
                 <label class="field">
+                    Nome completo
+                    <input type="text" name="nomeregistro" autocomplete="name" required data-signature-source>
+                </label>
+            </div>
+            <div class="fields">
+                <label class="field">
                     Nome de usuário
-                    <input type="text" name="usuario" autocomplete="username" required>
+                    <input type="text" name="usuarioregistro" autocomplete="username" required>
                 </label>
                 <label class="field">
                     Senha de acesso
-                    <input type="password" name="senha" autocomplete="current-password" required>
+                    <input type="password" name="senharegistro" autocomplete="new-password" required>
                 </label>
             </div>
         </section>
 
+        <p class="form-message" role="status" hidden></p>
+
         <section class="signatures">
+            <div class="signature">
+                <span class="signature-name-user" data-signature-target></span>
+                <span class="signature-line" data-text="Contratado"></span>
+            </div>
             <div class="signature">
                 <span class="signature-name">Dra. M. Kappa</span>
                 <span class="signature-line" data-text="Responsável ARK"></span>
@@ -62,21 +71,48 @@
         </section>
 
         <div class="contract-actions">
-            <button type="submit" class="button-sign" formaction="/cadastro">
+            <button type="submit" class="button-sign">
                 Assinar contrato
-            </button>
-            <button type="submit" class="button-login" formaction="/login" formnovalidate>
-                Já tenho contrato · Entrar
             </button>
         </div>
 
-        <!-- Rodapé do papel -->
         <div class="contract-footer">
             <span>CONFIDENCIAL</span>
             <span>ARK//LABS</span>
             <span>PÁG. 1/1</span>
         </div>
     </form>
+
+    <form class="badge" method="post" action="/login" data-fetch>
+        <div class="badge-header">
+            <img src="../assets/penrose.svg" width="20px" height="20px">
+            <span>ARK<span>//</span>LABS</span>
+        </div>
+
+        <div class="badge-body">
+            <p class="badge-kicker">Já é funcionário?</p>
+            <h2 class="badge-title">Credencial de acesso</h2>
+
+            <div class="badge-photo" aria-hidden="true"></div>
+
+            <label class="field">
+                Usuário
+                <input type="text" name="usuariologin" autocomplete="username" required>
+            </label>
+            <label class="field">
+                Senha
+                <input type="password" name="senhalogin" autocomplete="current-password" required>
+            </label>
+
+            <p class="form-message" role="status" hidden></p>
+
+            <button type="submit" class="button-badge">Passar crachá</button>
+        </div>
+
+        <div class="badge-barcode" aria-hidden="true"></div>
+    </form>
 </main>
+
+<script src="/js/auth-form.js"></script>
 
 <%- include('partials/footer') %>
