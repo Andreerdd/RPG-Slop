@@ -10,6 +10,10 @@
     <header class="header">
       <a class="logo glitch" data-text="ARK//LABS" href="/"><img src="../assets/penrose-red.svg" width="24px" height="24px">ARK<span>//</span>LABS</a>
       <div class="header-right">
-        <span><%= currentUser ? currentUser.username : 'Nada aqui por enquanto!' %></span>
+        <% if (currentUser) { %>
+          <span><%=currentUser.username%></span>
+          <% } else { %>
+          <a href="/login">entrar</a>
+        <% } %>
       </div>
     </header>

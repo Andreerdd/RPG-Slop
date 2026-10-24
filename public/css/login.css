@@ -350,7 +350,6 @@
   text-transform: uppercase;
 }
 
-/* Espaço da foto 3x4, com a silhueta de um funcionário */
 .badge-photo {
   align-self: center;
   width: 96px;
@@ -427,7 +426,6 @@
     var(--ink) 67px 72px, transparent 72px 77px);
 }
 
-/* Tela estreita: o crachá vai para cima do contrato */
 @media (max-width: 1060px) {
   .contract-page {
     flex-direction: column;

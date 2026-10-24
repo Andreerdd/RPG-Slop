@@ -23,9 +23,9 @@
     "bcrypt": "^6.0.0",
     "ejs": "^3.1.10",
     "express": "^5.3.0",
+    "express-session": "^1.19.0",
     "sequelize": "^6.37.8",
     "socket.io": "^4.8.4",
     "sqlite3": "^5.1.6"
-  },
-  "devDependencies": {}
+  }
 }

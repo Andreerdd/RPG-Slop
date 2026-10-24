@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const session = require('express-session');
 const { sequelize, User } = require('./database');
 const { onUserLogin, onUserRegister, getCurrentUser } = require('./account')
 
@@ -14,6 +15,13 @@ app.use('/css', express.static(path.join(publicDir, 'css')));
 app.use('/img', express.static(path.join(publicDir, 'img')));
 app.use(express.static(publicDir));
 app.use(express.urlencoded({ extended: false }));
+
+// Cada navegador recebe um cookie com o id da sua sessão; quem está logado fica em req.session.userId
+app.use(session({
+  secret: '626F6C736F6E61726F666C6176696F66756465727365766169',
+  resave: false,
+  saveUninitialized: false
+}));
 
 // rotas [rota, nome da página, título]
 const pages = [
@@ -33,7 +41,7 @@ const postRoutes = [
 // "Automatiza" os GET requests
 pages.forEach(([route, pageName, title]) => {
   app.get(route, async (req, res) => {
-    const currentUserId = getCurrentUser();
+    const currentUserId = getCurrentUser(req);
     const currentUser = currentUserId ? await User.findByPk(currentUserId) : null;
 
     res.render(pageName, {

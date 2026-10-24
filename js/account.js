@@ -5,9 +5,6 @@
 const bcrypt = require('bcrypt');
 const { User } = require('./database');
 
-// Usuário atualmente logado
-let currentUser = null;
-
 // Quantidade de vezes que o hash será feito
 const saltRounds = 10;
 
@@ -16,10 +13,9 @@ const saltRounds = 10;
  * @param {string} displayName nome que será exibido para o usuário
  * @param {string} username nome de usuário para login
  * @param {string} password senha sem hash
- * @param {Boolean} authenticate se deve logar com a conta criada automaticamente
  * @returns {Promise<object>} usuário criado
  */
-async function createUser(displayName, username, password, authenticate=false) {
+async function createUser(displayName, username, password) {
     const passwordHash = await bcrypt.hash(password, saltRounds);
 
     const user = await User.create({
@@ -28,35 +24,43 @@ async function createUser(displayName, username, password, authenticate=false) {
         passwordHash
     });
 
-    if (authenticate) await authenticateUser(username, password);
-
     return user;
 }
 
 /**
- * Confere as credenciais de login e autentica o usuário.
+ * Confere as credenciais de login e autentica o usuário na sessão da requisição.
+ * @param req request do node
  * @param {string} username nome de usuário
  * @param {string} password senha sem hash
  * @returns {Promise<Boolean>} se conseguiu autenticar
  */
-async function authenticateUser(username, password) {
+async function authenticateUser(req, username, password) {
     const user = await User.findOne({ where: { username } });
     if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
         return false;
     }
 
-    await forceAuthenticateUser(user);
+    await forceAuthenticateUser(req, user);
 
     return true;
 }
 
 /**
- * Define o usuário dado como autenticado sem fazer verificações.
+ * Define o usuário dado como autenticado na sessão da requisição, sem fazer verificações.
+ * A sessão é recriada para que o id antigo (de antes do login) não continue valendo.
+ * @param req request do node
  * @param user usuário que será autenticado
  * @return {Promise<void>}
  */
-async function forceAuthenticateUser(user) {
-    currentUser = user.id;
+function forceAuthenticateUser(req, user) {
+    return new Promise((resolve, reject) => {
+        req.session.regenerate((error) => {
+            if (error) return reject(error);
+
+            req.session.userId = user.id;
+            req.session.save((error) => error ? reject(error) : resolve());
+        });
+    });
 }
 
 /**
@@ -77,14 +81,14 @@ async function onUserRegister(req, res) {
             return res.status(409).json({ type: 'error', code: 'usuario-em-uso' });
         }
 
-        const user = await createUser(nomeregistro, usuarioregistro, senharegistro, true);
+        const user = await createUser(nomeregistro, usuarioregistro, senharegistro);
 
         if (!user)
             return res.status(500).json({ type: 'error', code: 'erro-servidor' });
 
         // Por mais que tenha acabado de criar a conta, em algum caso muito específico
         // a senha, por exemplo, já pode ter sido alterada
-        await authenticateUser(usuarioregistro, senharegistro);
+        await authenticateUser(req, usuarioregistro, senharegistro);
 
         return res.json({ type: 'success', redirect: '/' });
     } catch (error) {
@@ -106,7 +110,7 @@ async function onUserLogin(req, res) {
     }
 
     try {
-        const user = await authenticateUser(usuariologin, senhalogin);
+        const user = await authenticateUser(req, usuariologin, senhalogin);
         if (!user)
             return res.status(401).json({ type: 'error', code: 'credenciais' });
 
@@ -133,11 +137,12 @@ async function isUsernameUsed(username) {
 }
 
 /**
- * Retorna o usuário atualmente logado.
- * @return {object|null} o usuário atualmente logado ou null.
+ * Retorna o id do usuário logado na sessão da requisição.
+ * @param req request do node
+ * @return {string|null} o id do usuário logado ou null.
  */
-function getCurrentUser() {
-    return currentUser;
+function getCurrentUser(req) {
+    return req.session.userId || null;
 }
 
 module.exports = {
