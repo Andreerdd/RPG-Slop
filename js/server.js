@@ -15,12 +15,13 @@ app.use('/img', express.static(path.join(publicDir, 'img')));
 app.use(express.static(publicDir));
 app.use(express.urlencoded({ extended: false }));
 
-// Vetor de rotas GET (de páginas, basicamente) no formato [link, nome da página no /public, título]
+// rotas [rota, nome da página, título]
 const pages = [
-  ['/', 'index', 'RPG Slop'],
-  ['/exemplo', 'exemplo', 'Exemplo'],
-  ['/lobby', 'lobby', 'Lobby'],
-  ['/login', 'login', 'Entrar'],
+  ['/', 'lobby', 'Lobby'],
+  ['/login', 'login', 'Acessar Conta'], // cadastro e login na mesma página
+  ['/sala', 'sala', 'Sala X'],
+  ['/teste-llm', 'teste-llm', 'Teste LLM'],
+  ['/teste-lmm', 'teste-lmm', 'Teste LMM']
 ];
 
 // Vetor de rotas POST no formato [link, função que lidará com a requisição]

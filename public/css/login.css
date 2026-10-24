@@ -1,0 +1,290 @@
+@import url('https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap');
+
+:root {
+  --paper: #f3f4f8;  
+  --paper-line: #e2e5ec; 
+  --ink: #12141c;        
+  --ink-muted: #6b7086;   
+}
+
+
+.contract-page {
+  display: flex;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+
+.contract {
+  --corte: 16px;
+
+  position: relative;
+  width: 680px;
+  max-width: 100%;
+  padding: 40px 48px 24px;
+
+  color: var(--ink);
+
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--paper-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--paper-line) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.hazard-stripe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--red) 0px,
+    var(--red) 10px,
+    transparent 10px,
+    transparent 20px);
+}
+
+.contract-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.contract .lab-data {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.contract-code {
+  display: flex;
+  gap: 24px;
+
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: right;
+}
+
+.contract-code span::before {
+  content: attr(data-text);
+  display: block;
+
+  font-size: 10px;
+  color: var(--ink-muted);
+}
+
+.contract-title {
+  margin: 24px 0 4px;
+
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.contract-subtitle {
+  margin: 0 0 24px;
+
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+
+.contract-section {
+  margin-bottom: 24px;
+}
+
+.section-title {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+
+  margin: 0 0 12px;
+  padding-bottom: 4px;
+  border-bottom: 1px dashed var(--ink-muted);
+
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.section-title::before {
+  content: attr(data-text);
+
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--red);
+}
+
+.clauses {
+  margin: 0;
+  padding-left: 20px;
+
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.clauses li {
+  margin-bottom: 6px;
+}
+
+/* Trecho "tarjado": faixa preta por cima do texto, como documento censurado */
+.redacted {
+  background-color: var(--ink);
+  color: var(--ink);
+  padding: 0 2px;
+}
+
+.fields {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 16px;
+}
+
+.contract .field {
+  flex: 1;
+  margin: 0;
+  gap: 4px;
+
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-muted);
+}
+
+.contract .field input {
+  border: none;
+  border-bottom: 2px solid var(--ink);
+  background: transparent;
+  clip-path: none;
+  padding: 6px 2px;
+
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 16px;
+}
+
+.contract .field input:focus {
+  border-bottom-color: var(--red);
+}
+
+.contract .agree {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+
+  font-family: var(--mono);
+  font-size: 12px;
+  text-transform: none;
+  cursor: pointer;
+}
+
+.contract .agree input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--red);
+}
+
+.signatures {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  margin: 8px 0 24px;
+}
+
+.signature {
+  display: flex;
+  flex-direction: column;
+  width: 260px;
+}
+
+.signature-name {
+  font-family: 'Mrs Saint Delafield', cursive;
+  font-size: 32px;
+  color: #1b2a6b;
+  transform: rotate(-1deg);
+  margin-bottom: -15px;
+  margin-left: 25px;
+}
+
+.signature-line {
+  border-top: 1px solid var(--ink);
+  padding-top: 4px;
+}
+
+.signature-line::before {
+  content: attr(data-text);
+
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+}
+
+.contract-actions {
+  display: flex;
+  gap: 16px;
+}
+
+.contract-actions button {
+  flex: 1;
+  padding: 12px;
+  font-size: 18px;
+}
+
+.button-sign {
+  position: relative;
+  --cor: var(--red);
+  color: var(--white);
+}
+
+.button-login {
+  --cor: var(--ink);
+  color: var(--white);
+}
+
+.contract-actions button:hover {
+  filter: brightness(1.15);
+}
+
+.contract-footer {
+  display: flex;
+  justify-content: space-between;
+
+  margin-top: 24px;
+  padding-top: 8px;
+  border-top: 1px solid var(--paper-line);
+
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-muted);
+}
+
+@media (max-width: 600px) {
+  .contract {
+    padding: 32px 20px 20px;
+  }
+
+  .contract-title {
+    font-size: 28px;
+  }
+
+  .fields,
+  .contract-actions {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
