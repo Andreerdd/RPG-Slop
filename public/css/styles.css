@@ -226,6 +226,8 @@ button, .button {
 }
 
 .glitch { 
+  --cor1: var(--muted);
+  --cor2: var(--gray);
   position: relative; 
 }
 
@@ -238,8 +240,8 @@ button, .button {
   pointer-events: none;
 }
 
-.glitch::before { color: var(--muted); }
-.glitch::after { color: var(--gray); }
+.glitch::before { color: var(--cor1); }
+.glitch::after { color: var(--cor2); }
 
 .glitch:hover::before, .glitch.ativo::before { 
   opacity: .8; 
@@ -379,22 +381,26 @@ button, .button {
   gap: 16px;
 }
 
-html::-webkit-scrollbar {
-  width: 8px;
+*::-webkit-scrollbar {
+  width: 4px;
 }
 
-html::-webkit-scrollbar-track {
+*::-webkit-scrollbar-track {
+  background-color: var(--bg);
+}
+
+*::-webkit-scrollbar-button {
   display: none;
 }
 
-html::-webkit-scrollbar-button {
-  display: none;
+*::-webkit-scrollbar-thumb {
+  background-color: var(--line);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--gray-dark);
 }
 
 html::-webkit-scrollbar-thumb {
   background: linear-gradient(to left, var(--line) 4px, transparent 4px);
-}
-
-html::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to left, var(--gray-dark) 4px, transparent 4px);
 }

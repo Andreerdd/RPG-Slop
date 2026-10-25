@@ -35,17 +35,6 @@
   margin: 0;
 }
 
-.message {
-  max-width: 80%;
-  width: fit-content;
-
-  gap: 0px;
-
-  padding: 8px 16px;
-
-  animation: newMessage 0.2s normal;
-}
-
 @keyframes newMessage {
   0% {
     opacity: 0%;
@@ -88,6 +77,18 @@
 .muted {
   opacity: 50%;
   font-style: italic;
+}
+
+.message {
+  max-width: 80%;
+  width: fit-content;
+
+  gap: 0px;
+
+  padding: 8px 16px;
+  margin: 4px;
+
+  animation: newMessage 0.2s normal;
 }
 
 .scene-image {

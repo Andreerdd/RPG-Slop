@@ -124,18 +124,46 @@
   position: absolute;
   top: 24px;
   right: 24px;
+  animation: seal-hover 20s linear normal infinite;
 }
 
-.character-card:hover .seal {
+/* .character-card:hover .seal {
   animation: seal-hover 5s ease-in-out normal infinite;
-}
+} */
 
 @keyframes seal-hover {
   0% {
     filter: hue-rotate(0deg);
   }
-  50% {
+  10% {
+    filter: hue-rotate(36deg);
+  }
+  20% {
+    filter: hue-rotate(56deg);
+  }
+  30% {
     filter: hue-rotate(120deg);
+  }
+  40% {
+    filter: hue-rotate(270deg);
+  }
+  50% {
+    filter: hue-rotate(75deg);
+  }
+  60% {
+    filter: hue-rotate(120deg);
+  }
+  70% {
+    filter: hue-rotate(90deg);
+  }
+  80% {
+    filter: hue-rotate(170deg);
+  }
+  90% {
+    filter: hue-rotate(36deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
   }
 }
 
