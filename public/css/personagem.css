@@ -1,0 +1,166 @@
+.character-create {
+  width: min(760px, calc(100% - 32px));
+  margin: 32px auto 48px;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 18px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.character-form-panel {
+  position: relative;
+  overflow: hidden;
+  padding: 32px;
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(125deg, rgb(255 42 78 / 8%), transparent 38%),
+    repeating-linear-gradient(0deg, transparent 0 31px, rgb(230 233 242 / 2%) 32px),
+    var(--panel);
+}
+
+.form-heading {
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.form-heading h1 {
+  margin: 12px 0 4px;
+  font-size: 34px;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.form-heading p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.character-form {
+  display: grid;
+  gap: 22px;
+}
+
+.character-form .field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  color: var(--gray);
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  user-select: text;
+}
+
+.character-form input,
+.character-form select,
+.character-form textarea {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: var(--bg-2);
+  padding: 10px 12px;
+  color: var(--text);
+  font: 14px var(--font);
+  text-transform: none;
+}
+
+.character-form input:focus,
+.character-form select:focus,
+.character-form textarea:focus {
+  outline: 1px solid var(--cyan);
+  border-color: var(--cyan);
+}
+
+.character-form textarea {
+  min-height: 112px;
+  resize: vertical;
+}
+
+.attribute-fields {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 18px;
+  border: 1px solid var(--line);
+}
+
+.attribute-fields legend {
+  padding: 0 8px;
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.attribute-fields legend span {
+  margin-left: 8px;
+  color: var(--red);
+  font: 10px var(--mono);
+}
+
+.attribute-fields input {
+  font-family: var(--mono);
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+  padding-top: 4px;
+}
+
+.cancel-link {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.character-form button {
+  min-height: 44px;
+  padding: 10px 20px;
+  --cor: var(--cyan);
+}
+
+.form-error {
+  border-left: 3px solid var(--red);
+  padding: 10px 12px;
+  background: rgb(255 42 78 / 8%);
+  color: var(--text);
+}
+
+@media (max-width: 600px) {
+  .character-create {
+    margin-top: 20px;
+  }
+
+  .character-form-panel {
+    padding: 22px 16px;
+  }
+
+  .attribute-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 14px;
+  }
+
+  .form-actions {
+    align-items: stretch;
+    flex-direction: column-reverse;
+  }
+
+  .form-actions button,
+  .cancel-link {
+    justify-content: center;
+    text-align: center;
+  }
+}

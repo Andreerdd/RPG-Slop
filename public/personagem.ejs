@@ -1,0 +1,70 @@
+<%- include('partials/header') %>
+
+<link rel="stylesheet" href="/css/personagem.css" />
+
+<main class="character-create">
+    <a class="back-link" href="/">&larr; Voltar ao lobby</a>
+
+    <section class="character-form-panel">
+        <div class="form-heading">
+            <span class="tag" data-text="Arquivo de pesquisador">Nova ficha</span>
+            <h1>Criar personagem</h1>
+            <p>Registre a identidade e as capacidades do seu personagem.</p>
+        </div>
+
+        <% if (reqQuery.erro === 'campos') { %>
+        <p class="form-error" role="alert">Confira os campos: atributos devem estar entre 1 e 20.</p>
+        <% } %>
+
+        <form class="character-form" action="/personagem" method="POST">
+            <label class="field" for="name">
+                <span>Nome</span>
+                <input id="name" name="name" type="text" maxlength="100" placeholder="Nome do personagem" required />
+            </label>
+
+            <label class="field" for="characterClass">
+                <span>Classe</span>
+                <select id="characterClass" name="characterClass" required>
+                    <option value="" disabled selected>Selecione uma classe</option>
+                    <option>Explorador</option>
+                    <option>Guardião</option>
+                    <option>Técnico</option>
+                    <option>Médico</option>
+                    <option>Livre</option>
+                </select>
+            </label>
+
+            <label class="field" for="appearance">
+                <span>Aparência</span>
+                <textarea id="appearance" name="appearance" rows="4" maxlength="2000" placeholder="Descreva o que se nota ao olhar para ele..." required></textarea>
+            </label>
+
+            <fieldset class="attribute-fields">
+                <legend>Atributos <span>01—20</span></legend>
+                <label class="field" for="forca">
+                    <span>Força</span>
+                    <input id="forca" name="forca" type="number" min="1" max="20" value="10" required />
+                </label>
+                <label class="field" for="agilidade">
+                    <span>Agilidade</span>
+                    <input id="agilidade" name="agilidade" type="number" min="1" max="20" value="10" required />
+                </label>
+                <label class="field" for="intelecto">
+                    <span>Intelecto</span>
+                    <input id="intelecto" name="intelecto" type="number" min="1" max="20" value="10" required />
+                </label>
+                <label class="field" for="vigor">
+                    <span>Vigor</span>
+                    <input id="vigor" name="vigor" type="number" min="1" max="20" value="10" required />
+                </label>
+            </fieldset>
+
+            <div class="form-actions">
+                <a class="cancel-link" href="/">Cancelar</a>
+                <button type="submit">Salvar personagem</button>
+            </div>
+        </form>
+    </section>
+</main>
+
+<%- include('partials/footer') %>
