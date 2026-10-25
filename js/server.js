@@ -4,6 +4,9 @@ const session = require('express-session');
 const { sequelize, User } = require('./database');
 const { onUserLogin, onUserRegister, getCurrentUser } = require('./account')
 
+const { askGemini } = require('./llm.js');
+const providers = { gemini: askGemini };
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 const publicDir = path.join(__dirname, '../public');
@@ -15,6 +18,7 @@ app.use('/css', express.static(path.join(publicDir, 'css')));
 app.use('/img', express.static(path.join(publicDir, 'img')));
 app.use(express.static(publicDir));
 app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 // Cada navegador recebe um cookie com o id da sua sessão; quem está logado fica em req.session.userId
 app.use(session({
@@ -73,4 +77,25 @@ async function startServer() {
 startServer().catch((error) => {
   console.error('Erro ao inicializar o banco de dados:', error);
   process.exitCode = 1;
+});
+
+
+
+// rotas para LLM
+app.post("/api/chat", async (req, res) => {
+  const { message, provider = "gemini" } = req.body;
+
+  if (!message || typeof message !== "string") {
+    return res.status(400).json({ error: "mensagem vazia!" });
+  }
+
+  const ask = providers[provider];
+  if (!ask) return res.status(400).json({ error: "provider inválido!" });
+
+  try {
+    res.json({ reply: await ask(message) });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "erro na solicitação para a LLM!" });
+  }
 });

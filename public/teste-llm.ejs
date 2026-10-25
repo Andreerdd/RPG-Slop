@@ -1,5 +1,45 @@
 <%- include('partials/header') %>
 
+<div class="panel" style="width: 60%;">
+    <div class="panel" style="--corte: 6px; min-height: 200px;">
+        <span class="tag" data-text="LLM">Mensagens</span>
+        <div id="messages-area" style="display: flex; flex-direction: column; gap: 16px;"></div>
+    </div>
+    <textarea id="message-field"></textarea>
+    <button id="send-message">Enviar</button>
+</div>
 
+<script>
+    const areaMensagens = document.getElementById("messages-area");
+    const campoMensagem = document.getElementById("message-field");
+    const botaoEnviar = document.getElementById("send-message");
+
+    botaoEnviar.addEventListener("click", async () => {
+        const message = campoMensagem.value.trim();
+        if (!message) return;
+
+        adicionarMensagem("Você", mensagens);
+        campoMensagem.value = "";
+
+        const reply = await ask(mensagens );
+        adicionarMensagem("LLM", reply);
+    });
+
+    async function ask(message) {
+        const r = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message }),
+        });
+        const data = await r.json();
+        return data.reply ?? data.error;
+    }
+
+    function adicionarMensagem(autor, texto) {
+        const span = document.createElement("p");
+        span.textContent = `${autor}: ${texto}`;
+        areaMensagens.appendChild(span);
+    }
+</script>
 
 <%- include('partials/footer') %>

@@ -1,5 +1,115 @@
 <%- include('partials/header') %>
 
+<link rel="stylesheet" href="/css/sala.css"/>
 
+<div class="room">
+    <div class="panel" style="flex: 0.75 1 0; min-width: 0;">
+        <span class="tag" data-text="Dados da Missão">Campanha</span>
+        <div class="scene-image"><img src="assets/scene_placeholder.svg"></div>
+    </div>
+
+    <div class="panel"  style="flex: 1 1 0; min-width: 0;">
+        <span class="tag" data-text="Mensagens">Registro da Missão</span>
+        <div class="message-panel panel">
+            <div id="messages-area"></div>
+        </div>
+        <label>Mensagem</label>
+        <textarea id="message-field"></textarea>
+        <button id="send-message">Enviar</button>
+    </div>
+
+    <div class="right-panel" style="flex: 0.5 1 0; min-width: 0;">
+        <div class="panel">
+            <span class="tag" data-text="Você">Nome do Personagem</span>
+            <div class="inventory">
+                <span class="tag" data-text="Inventário"></span>
+                <span>Cartão de Identificação</span>
+                <span>Maçã</span>
+                <span>Pistola de choque</span>
+            </div>
+            <div>
+                <span class="tag" data-text="Atributos"></span>
+                <div class="attributes">
+                    <span>12 STR</span>
+                    <span>12 SPD</span>
+                    <span>12 CON</span>
+                    <span>12 INT</span>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="panel" style="flex-grow: 1;">
+            <span class="tag" data-text="Dados da Equipe">Esquadrão</span>
+            
+            <div class="panel" style="--corte: 6px;">
+                <div class="squad-item">
+                    <img src="assets/avatar_template.png">
+                    <div>
+                        <span class="tag" data-text="Nome do Usuário"></span>
+                        <span>Nome do Personagem</span>
+                        <div class="hp-bar" data-hp-current="7" data-hp-max="10" style="--hp-current: 5; --hp-max: 10;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const areaMensagens = document.getElementById("messages-area");
+    const campoMensagem = document.getElementById("message-field");
+    const botaoEnviar = document.getElementById("send-message");
+
+    botaoEnviar.addEventListener("click", async () => {
+        const message = campoMensagem.value.trim();
+        if (!message) return;
+
+        adicionarMensagem("Você", message);
+        campoMensagem.value = "";
+
+        const reply = await ask(message);
+        // const reply = "respostas desativadas para teste"
+        adicionarMensagem("LLM", reply);
+    });
+
+    async function ask(message) {
+        const r = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message }),
+        });
+        const data = await r.json();
+        return data.reply ?? data.error;
+    }
+
+    function adicionarMensagem(autor, texto) {
+        const span = document.createElement("span");
+        span.innerHTML = formatarMensagem(texto);
+        areaMensagens.appendChild(span);
+        span.dataset.author = autor;
+
+        span.classList.add("panel");
+        span.classList.add("message");
+        if(autor == "Você") span.classList.add("user-message");
+        else if(autor == "LLM") span.classList.add("game-message");
+
+        areaMensagens.scrollTop = areaMensagens.scrollHeight;
+    }
+
+    function formatarMensagem(texto) {
+        texto = texto.replace(/\*(.+?)\*/g, '<span class="muted">$1</span>');
+
+        // texto = texto.replace(/\n/g, "<br>");
+
+        return texto;
+    }
+
+    
+    // adicionarMensagem("Você", "ESSA DAQUI É UMA MENSAGEM CURTA");
+    // adicionarMensagem("LLM", "TEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃO");
+    // adicionarMensagem("Você", "TEXTO MÉDIO TEXTO MÉDIO TEXTO MÉDIO TEXTO MÉDIO TEXTO MÉDIO TEXTO MÉDIO TEXTO MÉDIO TEXTO MÉDIO TEXTO MÉDIO TEXTO MÉDIO TEXTO MÉDIO TEXTO MÉDIO TEXTO MÉDIO TEXTO MÉDIO TEXTO MÉDIO TEXTO MÉDIO ");
+    // adicionarMensagem("LLM", "TEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃOTEXTÃO TEXTÃO TEXTÃO");
+</script>
 
 <%- include('partials/footer') %>

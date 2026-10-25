@@ -24,7 +24,7 @@
   width: 480px;
   height: 280px;
 
-  --corte: 8px;
+  --corte: 6px;
   clip-path: polygon(
     var(--corte) 0%, 
     100% 0%, 
