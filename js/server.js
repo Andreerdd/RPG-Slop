@@ -37,6 +37,8 @@ const pages = [
   ['/teste-lmm', 'teste-lmm', 'Teste LMM']
 ];
 
+const authPages = ['/', 'sala']
+
 // Vetor de rotas POST no formato [link, função que lidará com a requisição]
 const postRoutes = [
   ['/create-account', onUserRegister],
@@ -47,7 +49,7 @@ const postRoutes = [
 pages.forEach(([route, pageName, title]) => {
   app.get(route, async (req, res) => {
     const currentUserId = getCurrentUser(req);
-    if (route === '/personagem' && !currentUserId) return res.redirect('/login');
+    if (authPages.includes(route) && !currentUserId) return res.redirect('/login');
 
     const currentUser = currentUserId ? await User.findByPk(currentUserId) : null;
     const characters = route === '/' && currentUserId
@@ -69,20 +71,21 @@ app.post('/personagem', async (req, res) => {
   if (!currentUserId) return res.redirect('/login');
 
   const { name, appearance, characterClass } = req.body;
-  const classOptions = ['Explorador', 'Guardião', 'Técnico', 'Médico', 'Livre'];
+  const classOptions = ['explorador', 'guardiao', 'tecnico', 'medico'];
+  const classNames = {'explorador' : 'Explorador', 'guardiao' : 'Guardião', 'tecnico' : 'Técnico', 'medico' : 'Médico'};
   const attributeNames = ['forca', 'agilidade', 'intelecto', 'vigor'];
   const attributes = Object.fromEntries(attributeNames.map((attribute) => [attribute, Number(req.body[attribute])]));
   const validAttributes = Object.values(attributes).every((value) => Number.isInteger(value) && value >= 1 && value <= 20);
 
   if (!name?.trim() || name.trim().length > 100 || !appearance?.trim() || appearance.trim().length > 2000 ||
       !classOptions.includes(characterClass) || !validAttributes) {
-    return res.redirect('/personagem?erro=campos');
+    return res.redirect('/?erro=campos');
   }
 
   await Character.create({
     name: name.trim(),
     appearance: appearance.trim(),
-    attributes: { classe: characterClass, ...attributes },
+    attributes: { classe: classNames[characterClass], ...attributes },
     createdByUserId: currentUserId,
   });
 

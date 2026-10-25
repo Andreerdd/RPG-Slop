@@ -8,14 +8,9 @@
         <% if (reqQuery.personagem === 'criado') { %>
         <p class="character-notice">Ficha criada e adicionada à sua equipe.</p>
         <% } %>
-        <% if (currentUser) { %>
-        <a class="button create-character-button" href="/personagem">+ Criar personagem</a>
         <div class="character-list">
-            <% if (characters.length === 0) { %>
-            <p class="character-empty">Nenhum personagem cadastrado.</p>
-            <% } %>
             <% characters.forEach((character) => { %>
-            <div class="character-card panel" id="template-card">
+            <div class="character-card panel">
                 <div class="lab-data">
                     <img src="../assets/penrose_red.svg" width="24px" height="24px">
                     <span>ARK LABORATÓRIOS</span>
@@ -43,12 +38,10 @@
 
             </div>
             <% }) %>
+            <button class="create-character-button" id="create-character"><span>+</span></button>
         </div>
-        <% } else { %>
-        <p class="character-empty">Entre na sua conta para criar e guardar personagens.</p>
-        <a class="button create-character-button" href="/login">Entrar ou criar conta</a>
-        <% } %>
     </div>
+    
     <div class="room-selection">
         <div class="panel">
             <span class="tag" data-text="Criar uma campanha">Começar pesquisa</span>
@@ -60,7 +53,7 @@
                 Tema da Sala
             </label>
             <textarea id="tema-sala"></textarea>
-            <button>Criar e gerar campanha</button>
+            <button type="submit">Criar e gerar campanha</button>
         </div>
 
         <div class="panel">
@@ -69,9 +62,106 @@
                 Código da Sala
             </label>
             <input type="text" id="codigo-sala" placeholder="A B C 1 2 3">
-            <button>Entrar</button>
+            <button type="submit">Entrar</button>
         </div>
     </div>
+
+    <div class="click-blocker" id="click-blocker" style="display: none;"></div>
+    <div class="character-creation panel" id="character-creation" style="display: none">
+        <span class="tag" data-text="Criar novo personagem">Ficha de Contratação</span>
+
+        <% if (reqQuery.erro === 'campos') { %>
+        <p class="form-error" role="alert">Confira os campos: atributos devem estar entre 1 e 20.</p>
+        <% } %>
+
+        <form class="character-form" action="/personagem" method="POST">
+            <label>
+                Nome
+                <input id="name" name="name" type="text" maxlength="100" placeholder="Nome do personagem" required />
+            </label>
+
+            <label>
+                Classe
+                <!-- <select id="characterClass" name="characterClass" required>
+                    <option value="" disabled selected>Selecione uma classe</option>
+                    <option>Explorador</option>
+                    <option>Guardião</option>
+                    <option>Técnico</option>
+                    <option>Médico</option>
+                    <option>Livre</option>
+                </select> -->
+                <div class="radio-field">
+                    <div class="radio-div">
+                        <label>
+                            Explorador
+                            <input type="radio" id="explorador" name="characterClass" value="explorador" data-text="Explorador" required>
+                        </label>
+                    </div>
+
+                    <div class="radio-div">
+                        <label>
+                            Guardião
+                            <input type="radio" id="guardiao" name="characterClass" value="guardiao" data-text="Guardião" required>
+                        </label>
+                    </div>
+
+                    <div class="radio-div">
+                        <label>
+                            Técnico
+                            <input type="radio" id="tecnico" name="characterClass" value="tecnico" data-text="Técnico" required>
+                        </label>
+                    </div>
+
+                    <div class="radio-div">
+                        <label>
+                            Médico
+                            <input type="radio" id="medico" name="characterClass" value="medico" data-text="Médico" required>
+                        </label>
+                    </div>
+                </div>
+            </label>
+
+            <label>
+                <span>Aparência</span>
+                <textarea id="appearance" name="appearance" rows="4" maxlength="2000" placeholder="Descreva o que se nota ao olhar para ele..." required></textarea>
+            </label>
+
+            <fieldset class="attribute-fields">
+                <legend>Atributos <span>01—20</span></legend>
+                <label>
+                    <span>Força</span>
+                    <input id="forca" name="forca" type="number" min="1" max="20" value="10" required />
+                </label>
+                <label>
+                    <span>Agilidade</span>
+                    <input id="agilidade" name="agilidade" type="number" min="1" max="20" value="10" required />
+                </label>
+                <label>
+                    <span>Intelecto</span>
+                    <input id="intelecto" name="intelecto" type="number" min="1" max="20" value="10" required />
+                </label>
+                <label>
+                    <span>Vigor</span>
+                    <input id="vigor" name="vigor" type="number" min="1" max="20" value="10" required />
+                </label>
+            </fieldset>
+
+            <div class="form-actions">
+                <a class="button cancel-button" style="--cor: var(--red)" href="/">Cancelar</a>
+                <button type="submit" style="flex-grow: 1;">Criar personagem</button>
+            </div>
+        </form>
+    </div>
 </div>
+
+<script>
+    const clickBlocker = document.getElementById("click-blocker");
+    const createCharacterPanel = document.getElementById("character-creation");
+    const createCharacterButton = document.getElementById("create-character");
+    createCharacterButton.addEventListener("click", () => {
+        createCharacterPanel.style.display = "flex";
+        clickBlocker.style.display = "flex";
+    })
+</script>
 
 <%- include('partials/footer') %>

@@ -14,9 +14,60 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  max-width: 976px;
+  max-width: 480px;
   margin-top: 32px;
   gap: 16px;
+}
+
+.create-character-button {
+  position: relative;
+  display: flex;
+
+  flex-direction: column;
+
+  width: 480px;
+  height: 280px;
+
+  --corte: 6px;
+  clip-path: polygon(
+    var(--corte) 0%, 
+    100% 0%, 
+    100% calc(100% - var(--corte)), 
+    calc(100% - var(--corte)) 100%,  
+    0% 100%,
+    0% var(--corte));
+
+  border: 4px dashed var(--white);
+  --cor: transparent;
+
+  color: var(--white) !important;
+
+  font-size: 86px;
+
+  text-align: center;
+  vertical-align: middle;
+  align-content: center;
+  justify-content: center;
+
+  padding: 0;
+
+  cursor: pointer;
+  
+  transition: 0.1s ease-in;
+}
+
+.create-character-button:hover {
+  border-color: var(--red);
+  color: var(--red) !important;
+}
+
+.create-character-button span::before {
+  position: absolute;
+  font-size: 16px;
+
+  inset: 0;
+  transform: translateY(calc(50% + 24px));
+  content: "Criar novo personagem";
 }
 
 .character-card {
@@ -281,4 +332,78 @@
   gap: 64px;
 
   width: 400px;
+}
+
+/* criação de personagem */
+.back-link {
+  display: inline-block;
+  margin-bottom: 18px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.character-creation {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+
+  overflow: hidden;
+  padding: 32px;
+  border: 1px solid var(--line);
+  background-color: var(--panel);
+}
+
+.character-form {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.attribute-fields {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 18px;
+  border: 1px solid var(--line);
+}
+
+.attribute-fields legend {
+  padding: 0 8px;
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.attribute-fields legend span {
+  margin-left: 8px;
+  color: var(--red);
+  font: 10px var(--mono);
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+  padding-top: 4px;
+}
+
+.cancel-link {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.form-error {
+  border-left: 3px solid var(--red);
+  padding: 10px 12px;
+  background: rgb(255 42 78 / 8%);
+  color: var(--text);
 }
