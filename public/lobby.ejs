@@ -3,14 +3,20 @@
 <link rel="stylesheet" href="/css/lobby.css" />
 
 <div class="lobby">
+    <form id="enter-room-form" action="/sala" method="GET"></form>
     <div class="panel character-selection">
         <span class="tag" data-text="Seus personagens">Equipe de pesquisa</span>
         <% if (reqQuery.personagem === 'criado') { %>
         <p class="character-notice">Ficha criada e adicionada à sua equipe.</p>
         <% } %>
+        <% if (reqQuery.erro === 'personagem') { %>
+        <p class="form-error" role="alert">Selecione um personagem válido para entrar na sala.</p>
+        <% } %>
         <div class="character-list">
             <% characters.forEach((character) => { %>
-            <div class="character-card panel">
+            <label class="character-card panel">
+                <input class="character-radio" type="radio" name="characterId" value="<%= character.id %>" form="enter-room-form" required aria-label="Selecionar <%= character.name %>">
+                <span class="selected-stamp" aria-hidden="true">Selecionado</span>
                 <div class="lab-data">
                     <img src="../assets/penrose_red.svg" width="24px" height="24px">
                     <span>ARK LABORATÓRIOS</span>
@@ -36,10 +42,15 @@
 
                 <div class="barcode"></div>
 
-            </div>
+            </label>
             <% }) %>
             <button class="create-character-button" id="create-character"><span>+</span></button>
         </div>
+        <% if (characters.length) { %>
+        <button class="enter-room-button" type="submit" form="enter-room-form">Entrar na sala com personagem selecionado</button>
+        <% } else { %>
+        <p class="empty-characters">Crie um personagem para poder entrar na sala.</p>
+        <% } %>
     </div>
     
     <div class="room-selection">

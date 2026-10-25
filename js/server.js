@@ -51,6 +51,10 @@ pages.forEach(([route, pageName, title]) => {
     const currentUserId = getCurrentUser(req);
     if (authPages.includes(route) && !currentUserId) return res.redirect('/login');
 
+    const selectedCharacter = route === '/sala' && req.query.characterId
+      ? await Character.findOne({ where: { id: req.query.characterId, createdByUserId: currentUserId } })
+      : null;
+    if (route === '/sala' && !selectedCharacter) return res.redirect('/?erro=personagem');
     const currentUser = currentUserId ? await User.findByPk(currentUserId) : null;
     const characters = route === '/' && currentUserId
       ? await Character.findAll({ where: { createdByUserId: currentUserId }, order: [['createdAt', 'DESC']] })
@@ -62,6 +66,7 @@ pages.forEach(([route, pageName, title]) => {
       reqQuery: req.query,
       currentUser,
       characters,
+      selectedCharacter,
     });
   });
 });

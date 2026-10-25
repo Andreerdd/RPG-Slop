@@ -20,7 +20,7 @@
 
     <div class="right-panel" style="flex: 0.5 1 0; min-width: 0;">
         <div class="panel">
-            <span class="tag" data-text="Você">Nome do Personagem</span>
+            <span class="tag" data-text="Você"><%= selectedCharacter.name %></span>
             <div class="inventory">
                 <span class="tag" data-text="Inventário"></span>
                 <span>Cartão de Identificação</span>
@@ -30,10 +30,10 @@
             <div>
                 <span class="tag" data-text="Atributos"></span>
                 <div class="attributes">
-                    <span>12 STR</span>
-                    <span>12 SPD</span>
-                    <span>12 CON</span>
-                    <span>12 INT</span>
+                    <span><%= selectedCharacter.attributes.forca %> FOR</span>
+                    <span><%= selectedCharacter.attributes.agilidade %> AGI</span>
+                    <span><%= selectedCharacter.attributes.intelecto %> INT</span>
+                    <span><%= selectedCharacter.attributes.vigor %> VIG</span>
                 </div>
             </div>
         </div>
@@ -47,7 +47,7 @@
                     <img src="assets/avatar_template.png">
                     <div>
                         <span class="tag" data-text="Nome do Usuário"></span>
-                        <span>Nome do Personagem</span>
+                        <span><%= selectedCharacter.name %></span>
                         <div class="hp-bar" data-hp-current="7" data-hp-max="10" style="--hp-current: 5; --hp-max: 10;"></div>
                     </div>
                 </div>
