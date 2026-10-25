@@ -14,7 +14,7 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  max-width: 480px;
+  max-width: 976px;
   margin-top: 32px;
   gap: 16px;
 }

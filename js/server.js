@@ -92,6 +92,17 @@ app.post('/personagem', async (req, res) => {
   return res.redirect('/?personagem=criado');
 });
 
+app.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error('erro no logout', err);
+      return res.status(500).send('erro no logout');
+    }
+    res.clearCookie('connect.sid');
+    return res.redirect('/login');
+  });
+});
+
 // "Automatiza" os POST requests
 postRoutes.forEach(([route, handler]) => {
   app.post(route, (req, res) => {

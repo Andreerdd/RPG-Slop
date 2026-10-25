@@ -25,7 +25,7 @@
                 <div class="sheet">
                     <span class="sheet-item" data-text="NOME"><%= character.name %></span>
                     <span class="sheet-item" data-text="CLASSE"><%= character.attributes.classe %></span>
-                    <span class="sheet-item" data-text="DATA DE EXPEDIÇÃO">23.10.2026</span>
+                    <span class="sheet-item" data-text="DATA DE EXPEDIÇÃO"><%= character.createdAt.toLocaleDateString('pt-BR') %></span>
                     <div class="attributes">
                         <span class="attribute-item" data-text="FOR"><%= character.attributes.forca %></span>
                         <span class="attribute-item" data-text="AGI"><%= character.attributes.agilidade %></span>

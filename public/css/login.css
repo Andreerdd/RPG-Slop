@@ -356,10 +356,7 @@
   height: 120px;
 
   border: 2px solid var(--ink);
-  background:
-    radial-gradient(circle at 50% 38%, var(--ink-muted) 22px, transparent 23px),
-    radial-gradient(ellipse 44px 36px at 50% 112%, var(--ink-muted) 98%, transparent 100%),
-    var(--paper-line);
+  background-image: url('../assets/avatar_template.png');
 }
 
 .badge .field {
