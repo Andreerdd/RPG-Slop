@@ -1,5 +1,45 @@
 <%- include('partials/header') %>
 
+<main class="panel" style="width: 60%;">
+    <h1>Teste do Nano Banana</h1>
+    <p>Gere uma imagem e visualize o resultado no elemento abaixo.</p>
+    <img id="imagem-legal" alt="Imagem gerada pelo Nano Banana"
+         style="display: block; max-width: 100%; min-height: 200px;" />
+    <button id="generate-image" type="button">Gerar imagem</button>
+    <p id="image-status" role="status"></p>
+</main>
 
+<script>
+    const imagemLegal = document.getElementById("imagem-legal");
+    const botaoGerarImagem = document.getElementById("generate-image");
+    const statusImagem = document.getElementById("image-status");
+
+    botaoGerarImagem.addEventListener("click", async () => {
+        botaoGerarImagem.disabled = true;
+        statusImagem.textContent = "Gerando imagem...";
+
+        try {
+            const response = await fetch("/api/image", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    prompt: "Um laboratório futurista de desextinção de dinossauros, em estilo cinematográfico",
+                }),
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Não foi possível gerar a imagem.");
+            }
+
+            imagemLegal.src = data.imageUrl;
+            statusImagem.textContent = "Imagem gerada com sucesso.";
+        } catch (error) {
+            statusImagem.textContent = error.message;
+        } finally {
+            botaoGerarImagem.disabled = false;
+        }
+    });
+</script>
 
 <%- include('partials/footer') %>

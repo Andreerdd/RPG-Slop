@@ -13,6 +13,30 @@ async function askGemini(message) {
   return response.text;
 }
 
+/**
+ * Gera uma imagem com base nas instruções dadas, utilizando Nano Banana.
+ * Informações sobre a api do Nano Banana: https://ai.google.dev/gemini-api/docs/image-generation
+ * @param {String} prompt instrução para a criação da imagem
+ * @return {Promise<String>} Promessa com o url da imagem, pronto para colocar numa tag HTML.
+ */
+async function generateImageWithNanoBanana(prompt) {
+  const response = await genai.interactions.create({
+    model: "gemini-nano-banana-2.1",
+    input: prompt,
+
+    // Força retornar apenas imagens, sem o texto descritivo
+    response_format: [
+      { type: "image" }
+    ],
+  });
+
+  // Obtém o blob retornado
+  const generatedImage = response.output_image;
+  if (!generatedImage)
+    throw new Error("Erro na geração da imagem. O limite pode ter sido atingido.");
+
+  return `data:${generatedImage.mime_type};base64,${generatedImage.data}`;
+}
 // async function askOllama(message) {
 //   const controller = new AbortController();
 //   const timer = setTimeout(() => controller.abort(), 60_000); // limite de tempo
@@ -44,4 +68,4 @@ async function askGemini(message) {
 //   }
 // }
 
-module.exports = { askGemini };
+module.exports = { askGemini, generateImageWithNanoBanana };

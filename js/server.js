@@ -4,7 +4,7 @@ const session = require('express-session');
 const { sequelize, User, Character } = require('./database');
 const { onUserLogin, onUserRegister, getCurrentUser } = require('./account')
 
-const { askGemini } = require('./llm.js');
+const { askGemini, generateImageWithNanoBanana } = require('./llm.js');
 const providers = { gemini: askGemini };
 
 const app = express();
@@ -33,6 +33,7 @@ const pages = [
   ['/personagem', 'personagem', 'Criar personagem'],
   ['/login', 'login', 'Acessar Conta'], // cadastro e login na mesma página
   ['/sala', 'sala', 'Sala X'],
+
   ['/teste-llm', 'teste-llm', 'Teste LLM'],
   ['/teste-lmm', 'teste-lmm', 'Teste LMM']
 ];
@@ -51,10 +52,6 @@ pages.forEach(([route, pageName, title]) => {
     const currentUserId = getCurrentUser(req);
     if (authPages.includes(route) && !currentUserId) return res.redirect('/login');
 
-    const selectedCharacter = route === '/sala' && req.query.characterId
-      ? await Character.findOne({ where: { id: req.query.characterId, createdByUserId: currentUserId } })
-      : null;
-    if (route === '/sala' && !selectedCharacter) return res.redirect('/?erro=personagem');
     const currentUser = currentUserId ? await User.findByPk(currentUserId) : null;
     const characters = route === '/' && currentUserId
       ? await Character.findAll({ where: { createdByUserId: currentUserId }, order: [['createdAt', 'DESC']] })
@@ -66,8 +63,8 @@ pages.forEach(([route, pageName, title]) => {
       reqQuery: req.query,
       currentUser,
       characters,
-      selectedCharacter,
     });
+
   });
 });
 
@@ -148,5 +145,21 @@ app.post("/api/chat", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "erro na solicitação para a LLM!" });
+  }
+});
+
+app.post("/api/image", async (req, res) => {
+  const { prompt } = req.body;
+
+  if (typeof prompt !== "string" || !prompt.trim()) {
+    return res.status(400).json({ error: "prompt vazio!" });
+  }
+
+  try {
+    const imageUrl = await generateImageWithNanoBanana(prompt.trim());
+    return res.json({ imageUrl });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Erro ao gerar a imagem! O limite pode ter sido atingido." });
   }
 });
