@@ -19,7 +19,7 @@ async function askGemini(message) {
  * @param {String} prompt instrução para a criação da imagem
  * @return {Promise<String>} Promessa com o url da imagem, pronto para colocar numa tag HTML.
  */
-async function generateImageWithNanoBanana(prompt) {
+async function generateImageWithNanoBanana(prompt, name, id) {
   const response = await genai.interactions.create({
     model: "gemini-nano-banana-2.1",
     input: prompt,
@@ -35,8 +35,16 @@ async function generateImageWithNanoBanana(prompt) {
   if (!generatedImage)
     throw new Error("Erro na geração da imagem. O limite pode ter sido atingido.");
 
-  return `data:${generatedImage.mime_type};base64,${generatedImage.data}`;
+  const fileName = name + id + MIME_TO_EXT[generatedImage.mime_type];
+  const publicFolder = path.join(process.cwd(), 'public', 'assets');
+  const filePath = path.join(publicFolder, fileName);
+  const publicUrl = `/assets/${fileName}`;
+  const imageBuffer = Buffer.from(generatedImage.data, 'base64');
+  await fs.writeFile(filePath, imageBuffer);
+
+  return publicUrl;
 }
+
 // async function askOllama(message) {
 //   const controller = new AbortController();
 //   const timer = setTimeout(() => controller.abort(), 60_000); // limite de tempo

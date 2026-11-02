@@ -112,7 +112,6 @@ postRoutes.forEach(([route, handler]) => {
   });
 });
 
-
 async function startServer() {
   await sequelize.authenticate();
   await sequelize.sync();
@@ -126,7 +125,6 @@ startServer().catch((error) => {
   console.error('Erro ao inicializar o banco de dados:', error);
   process.exitCode = 1;
 });
-
 
 
 // rotas para LLM
