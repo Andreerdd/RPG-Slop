@@ -13,7 +13,11 @@
         <p class="form-error" role="alert">Selecione um personagem válido para entrar na sala.</p>
         <% } %>
         <div class="character-list">
-            <% characters.forEach((character) => { %>
+            <% characters.forEach((character) => {
+                let avatarUrl = character.imageUrl || "assets/avatar_template.png";
+                avatarUrl = avatarUrl.replace(/^\/?public\//, "/");
+                if (!avatarUrl.startsWith("/")) avatarUrl = `/${avatarUrl}`;
+            %>
             <label class="character-card panel">
                 <input class="character-radio" type="radio" name="characterId" value="<%= character.id %>" form="enter-room-form" required aria-label="Selecionar <%= character.name %>">
                 <span class="selected-stamp" aria-hidden="true">Selecionado</span>
@@ -24,7 +28,7 @@
                 <span class="card-label">CARTÃO DE PESQUISA</span>
                 <img class="seal" src="../assets/seal2.png" width="96px" height="96px">
 
-                <div class="avatar"></div>
+                <div class="avatar" style="background-image: url('<%= avatarUrl %>');"></div>
 
                 <span class="document-number" data-text="DOCUMENTO">13.25.32.08</span>
 

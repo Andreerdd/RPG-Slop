@@ -226,6 +226,14 @@
 
   background-image: url("../assets/avatar_template.png");
   background-size: cover;
+  filter: 
+    contrast(1.6) 
+    brightness(1.15) 
+    saturate(0.15) 
+    sepia(0.2) 
+    hue-rotate(160deg) 
+    blur(0.4px);
+
   /* background-color: rebeccapurple; */
   box-shadow: 0 0 0 1px var(--text), 0 0 0 2px var(--gray);
 

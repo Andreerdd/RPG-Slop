@@ -4,8 +4,8 @@ const session = require('express-session');
 const { sequelize, User, Character } = require('./database');
 const { onUserLogin, onUserRegister, getCurrentUser } = require('./account')
 
-const { askGemini, generateImageWithNanoBanana } = require('./llm.js');
-const providers = { gemini: askGemini };
+const { generateImage, generateAvatar } = require('./imagegeneration.js');
+const { askGemini } = require('./textgeneration.js');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -84,12 +84,14 @@ app.post('/personagem', async (req, res) => {
     return res.redirect('/?erro=campos');
   }
 
-  await Character.create({
+  const newCharacter = await Character.create({
     name: name.trim(),
     appearance: appearance.trim(),
     attributes: { classe: classNames[characterClass], ...attributes },
     createdByUserId: currentUserId,
   });
+
+  generateAvatar(newCharacter.id, appearance.trim(), classNames[characterClass]);
 
   return res.redirect('/?personagem=criado');
 });
@@ -129,35 +131,31 @@ startServer().catch((error) => {
 
 // rotas para LLM
 app.post("/api/chat", async (req, res) => {
-  const { message, provider = "gemini" } = req.body;
+  const { message } = req.body;
 
   if (!message || typeof message !== "string") {
     return res.status(400).json({ error: "mensagem vazia!" });
   }
 
-  const ask = providers[provider];
-  if (!ask) return res.status(400).json({ error: "provider inválido!" });
-
   try {
-    res.json({ reply: await ask(message) });
+    res.json({ reply: await askGemini(message) });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "erro na solicitação para a LLM!" });
   }
 });
 
-app.post("/api/image", async (req, res) => {
-  const { prompt } = req.body;
-
-  if (typeof prompt !== "string" || !prompt.trim()) {
-    return res.status(400).json({ error: "prompt vazio!" });
+app.post("/api/avatar", async (req, res) => {
+  const { uuid, prompt } = req.body;
+  
+  if (!prompt || typeof prompt !== 'string' || prompt.trim().length === 0) {
+    return res.status(400).json({ error: "aparência inválida ou vazia!" });
   }
 
   try {
-    const imageUrl = await generateImageWithNanoBanana(prompt.trim());
-    return res.json({ imageUrl });
+    res.json({ imgName: await generateAvatar(prompt.trim()) });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: "Erro ao gerar a imagem! O limite pode ter sido atingido." });
+    res.status(500).json({ error: "erro na solicitação para o forge!" });
   }
 });
