@@ -20,6 +20,7 @@
 }
 
 .create-character-button {
+  margin: 0;
   position: relative;
   display: flex;
 
@@ -71,19 +72,13 @@
 }
 
 .character-card {
+  margin: 0;
   position: relative;
   display: block;
   width: 480px;
   height: 280px;
 
-  --corte: 6px;
-  clip-path: polygon(
-    var(--corte) 0%, 
-    100% 0%, 
-    100% calc(100% - var(--corte)), 
-    calc(100% - var(--corte)) 100%,  
-    0% 100%,
-    0% var(--corte));
+  clip-path: none;
 
   border: none;
 
@@ -106,34 +101,10 @@
 }
 
 .character-card:focus-within {
-  outline: 3px solid var(--red);
-  outline-offset: 4px;
+  outline: none;
 }
 
-.character-card:has(.character-radio:checked) {
-  outline: 4px solid var(--red);
-  outline-offset: 3px;
-}
 
-.selected-stamp {
-  position: absolute;
-  z-index: 1;
-  top: 88px;
-  right: 18px;
-  display: none;
-  padding: 7px 12px;
-  border: 2px solid var(--red);
-  color: var(--red);
-  background: rgb(255 255 255 / 88%);
-  font: 900 13px 'Readex Pro', sans-serif;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  transform: rotate(-8deg);
-}
-
-.character-card:has(.character-radio:checked) .selected-stamp {
-  display: block;
-}
 
 .enter-room-button {
   align-self: flex-start;
@@ -227,12 +198,11 @@
   background-image: url("../assets/avatar_template.png");
   background-size: cover;
   filter: 
-    contrast(1.6) 
-    brightness(1.15) 
-    saturate(0.15) 
-    sepia(0.2) 
-    hue-rotate(160deg) 
-    blur(0.4px);
+    saturate(0.5) 
+    contrast(100.6) 
+    brightness(120.5) 
+    sepia(1.2) 
+    hue-rotate(160deg);
 
   /* background-color: rebeccapurple; */
   box-shadow: 0 0 0 1px var(--text), 0 0 0 2px var(--gray);
@@ -382,6 +352,8 @@
   right: 16px;
   width: 180px;
 
+  --offset: 0px;
+
   background: repeating-linear-gradient(90deg,
     black 0 2px, transparent 2px 4px,
     black 4px 5px, transparent 5px 8px,
@@ -396,8 +368,19 @@
     black 51px 58px, transparent 58px 61px,
     black 61px 65px, transparent 65px 67px,
     black 67px 72px, transparent 72px 77px,
-    black 77px 79px),
+    black 77px 79px, transparent 79px 83px,
+    black 83px 86px, transparent 86px 88px,
+    black 88px 94px, transparent 94px 96px,
+    black 96px 101px, transparent 101px 105px,
+    black 105px 112px, transparent 112px 115px,
+    black 115px 118px, transparent 118px 120px,
+    black 120px 124px, transparent 124px 128px,
+    black 128px 135px, transparent 135px 137px,
+    black 137px 141px, transparent 141px 145px,
+    black 145px 150px),
     white;
+
+  background-position-x: var(--offset);
     
   box-shadow: 0 0 0 1px var(--text), 0 0 0 2px var(--gray);
 }
@@ -489,4 +472,31 @@
   padding: 10px 12px;
   background: rgb(255 42 78 / 8%);
   color: var(--text);
+}
+
+.selected-seal {
+  position: absolute;
+  z-index: 2;
+  top: 10px;
+  right: 10px;
+  width: 36x;
+  height: 36px;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+  
+  visibility: hidden;
+  scale: 0;
+  rotate: -45deg;
+  transition:
+    scale 0.2s ease,
+    rotate 0.2s ease,
+    visibility 0s linear 0.2s
+}
+
+.character-card:has(.character-radio:checked) .selected-seal {
+  visibility: visible;
+  scale: 1;
+  rotate: 0deg;
+  transition-delay: 0s;
 }
